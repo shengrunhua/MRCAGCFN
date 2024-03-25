@@ -10,36 +10,36 @@ class mish(nn.Module):
         return x * torch.tanh(F.softplus(x))
 
 class MRCAGCFN(nn.Module):
-    def __init__(self,S,l,class_num,hidden,device):
+    def __init__(self, S, l, class_num, hidden, device):
         super(MRCAGCFN, self).__init__()
-        self.S=S
-        self.l=l
-        self.device=device
+        self.S = S
+        self.l = l
+        self.device = device
         
-        self.hidden=int(hidden)
+        self.hidden = int(hidden)
         
-        self.spectral=nn.Sequential(nn.Conv2d(S,hidden*2,(1,1)),
+        self.spectral = nn.Sequential(nn.Conv2d(S, hidden*2, (1, 1)),
                                     nn.BatchNorm2d(hidden*2),
                                     mish(),
-                                    nn.Conv2d(hidden*2,hidden,(1,1)),
+                                    nn.Conv2d(hidden*2, hidden, (1, 1)),
                                     nn.BatchNorm2d(hidden),
                                     mish())
         
-        self.conv1=nn.ModuleList([DeformConv2d(hidden,hidden,kernel_size=(3,3),padding=1),DeformConv2d(hidden,hidden,kernel_size=(3,3),padding=1),DeformConv2d(hidden,hidden,kernel_size=(3,3),padding=1)])
-        self.conv2=nn.ModuleList([DeformConv2d(hidden,hidden,kernel_size=(5,5),padding=2),DeformConv2d(hidden,hidden,kernel_size=(5,5),padding=2),DeformConv2d(hidden,hidden,kernel_size=(5,5),padding=2)])
-        self.conv3=nn.ModuleList([DeformConv2d(hidden,hidden,kernel_size=(7,7),padding=3),DeformConv2d(hidden,hidden,kernel_size=(7,7),padding=3),DeformConv2d(hidden,hidden,kernel_size=(7,7),padding=3)])
-        self.bnc=nn.ModuleList([nn.BatchNorm2d(hidden) for i in range(9)])
+        self.conv1 = nn.ModuleList([DeformConv2d(hidden, hidden, kernel_size = (3, 3), padding = 1), DeformConv2d(hidden, hidden, kernel_size = (3, 3), padding = 1), DeformConv2d(hidden, hidden, kernel_size = (3, 3), padding = 1)])
+        self.conv2 = nn.ModuleList([DeformConv2d(hidden, hidden, kernel_size = (5, 5), padding = 2), DeformConv2d(hidden, hidden, kernel_size = (5, 5), padding = 2), DeformConv2d(hidden, hidden, kernel_size = (5, 5), padding = 2)])
+        self.conv3 = nn.ModuleList([DeformConv2d(hidden, hidden, kernel_size = (7, 7), padding = 3), DeformConv2d(hidden, hidden, kernel_size = (7, 7), padding = 3), DeformConv2d(hidden, hidden, kernel_size = (7, 7), padding = 3)])
+        self.bnc = nn.ModuleList([nn.BatchNorm2d(hidden) for i in range(9)])
         
-        self.gcn=nn.ModuleList([nn.Linear(hidden,hidden),nn.Linear(hidden,hidden),nn.Linear(hidden,hidden)])
-        self.spegcn=nn.ModuleList([nn.Conv1d(l**2,l**2,kernel_size=2,dilation=hidden,groups=l**2) for i in range(3)])
-        self.bng=nn.ModuleList([nn.BatchNorm1d(l**2),nn.BatchNorm1d(l**2),nn.BatchNorm1d(l**2)])
+        self.gcn = nn.ModuleList([nn.Linear(hidden, hidden) for i in range(3)])
+        self.spegcn = nn.ModuleList([nn.Conv1d(l**2, l**2, kernel_size = 2, dilation = hidden, groups = l**2) for i in range(3)])
+        self.bng = nn.ModuleList([nn.BatchNorm1d(l**2) for i in range(3)])
         
-        self.fpc=nn.Conv1d(hidden,hidden,kernel_size=(l**2),padding=0,groups=hidden)
-        self.bnfpc=nn.BatchNorm1d(hidden)
-        self.fpspeg=nn.Conv1d(1,1,kernel_size=2,padding=0,dilation=hidden)
-        self.bnfpg=nn.BatchNorm1d(1)
+        self.fpc = nn.Conv1d(hidden, hidden, kernel_size = (l**2), padding = 0, groups = hidden)
+        self.bnfpc = nn.BatchNorm1d(hidden)
+        self.fpspeg = nn.Conv1d(1, 1, kernel_size = 2, padding = 0, dilation = hidden)
+        self.bnfpg = nn.BatchNorm1d(1)
         
-        self.output=nn.Linear(hidden,class_num)
+        self.output = nn.Linear(hidden, class_num)
     
     
     def AGCM(self,x_g,dist,i):
