@@ -31,12 +31,12 @@ class MRCAGCFN(nn.Module):
         self.bnc = nn.ModuleList([nn.BatchNorm2d(hidden) for i in range(9)])
         
         self.gcn = nn.ModuleList([nn.Linear(hidden, hidden) for i in range(3)])
-        self.spegcn = nn.ModuleList([nn.Conv1d(l ** 2, l ** 2, kernel_size = 2, dilation = hidden, groups = l ** 2) for i in range(3)])
+        self.aff = nn.ModuleList([nn.Conv1d(l ** 2, l ** 2, kernel_size = 2, dilation = hidden, groups = l ** 2) for i in range(3)])
         self.bng = nn.ModuleList([nn.BatchNorm1d(l ** 2) for i in range(3)])
         
         self.fpc = nn.Conv1d(hidden, hidden, kernel_size = (l ** 2), padding = 0, groups = hidden)
         self.bnfpc = nn.BatchNorm1d(hidden)
-        self.fpspeg = nn.Conv1d(1, 1, kernel_size = 2, padding = 0, dilation = hidden)
+        self.fpaff = nn.Conv1d(1, 1, kernel_size = 2, padding = 0, dilation = hidden)
         self.bnfpg = nn.BatchNorm1d(1)
         
         self.output = nn.Linear(hidden, class_num)
@@ -47,7 +47,7 @@ class MRCAGCFN(nn.Module):
         res_x_g = x_g
         x_g = torch.bmm(dist, x_g)
         x_g = torch.cat((x_g, res_x_g), dim=2)
-        x_g = self.spegcn[i](x_g)
+        x_g = self.aff[i](x_g)
         x_g = self.bng[i](x_g)
         x_g = mish()(x_g)
         
@@ -89,7 +89,7 @@ class MRCAGCFN(nn.Module):
         dist = dist[:, int(x_g.size(1) / 2) + 1, :].unsqueeze(1)
         x_g = torch.bmm(dist, x_g)
         x_g = torch.cat((x_g, res_x_g), dim=2)
-        x_g = self.fpspeg(x_g)
+        x_g = self.fpaff(x_g)
         x_g = self.bnfpg(x_g)
         x_g = mish()(x_g)
         x = (x_c + x_g) / 2
