@@ -78,7 +78,7 @@ class MRCAGCFN(nn.Module):
         
         return x
     
-    def fpm(self, x, dist):
+    def ALFPM(self, x, dist):
         x_g = x
         x_c = torch.transpose(x, 1, 2)
         x_c = self.fpc(x_c)
@@ -114,6 +114,6 @@ class MRCAGCFN(nn.Module):
             x_c = x_c.reshape(-1, self.l ** 2, x_c.shape[3])
             x = self.fusion(x_g, x_c, i)
         
-        x = self.fpm(x, dist)
+        x = self.ALFPM(x, dist)
         
         return x
