@@ -42,7 +42,7 @@ class MRCAGCFN(nn.Module):
         self.output = nn.Linear(hidden, class_num)
     
     
-    def AGCM(self, x_g, dist, i):
+    def AFGCM(self, x_g, dist, i):
         x_g = self.gcn[i](x_g)
         res_x_g = x_g
         x_g = torch.bmm(dist, x_g)
@@ -109,7 +109,7 @@ class MRCAGCFN(nn.Module):
         for i in range(3):
             x_g = x
             x_c = x.reshape(-1, self.l, self.l, x.shape[2])
-            x_g = self.AGCM(x_g, dist, i)
+            x_g = self.AFGCM(x_g, dist, i)
             x_c = self.MRCM(x_c, i)
             x_c = x_c.reshape(-1, self.l ** 2, x_c.shape[3])
             x = self.fusion(x_g, x_c, i)
