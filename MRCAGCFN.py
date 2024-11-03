@@ -25,9 +25,9 @@ class MRCAGCFN(nn.Module):
                                     nn.BatchNorm2d(hidden),
                                     mish())
         
-        self.conv1 = nn.ModuleList([DeformConv2d(hidden, hidden, kernel_size = (3, 3), padding = 1), DeformConv2d(hidden, hidden, kernel_size = (3, 3), padding = 1), DeformConv2d(hidden, hidden, kernel_size = (3, 3), padding = 1)])
-        self.conv2 = nn.ModuleList([DeformConv2d(hidden, hidden, kernel_size = (5, 5), padding = 2), DeformConv2d(hidden, hidden, kernel_size = (5, 5), padding = 2), DeformConv2d(hidden, hidden, kernel_size = (5, 5), padding = 2)])
-        self.conv3 = nn.ModuleList([DeformConv2d(hidden, hidden, kernel_size = (7, 7), padding = 3), DeformConv2d(hidden, hidden, kernel_size = (7, 7), padding = 3), DeformConv2d(hidden, hidden, kernel_size = (7, 7), padding = 3)])
+        self.conv1 = nn.ModuleList([DeformConv2d(hidden, hidden, kernel_size = (3, 3), padding = 1) for i in range(3))
+        self.conv2 = nn.ModuleList([DeformConv2d(hidden, hidden, kernel_size = (5, 5), padding = 2) for i in range(3))
+        self.conv3 = nn.ModuleList([DeformConv2d(hidden, hidden, kernel_size = (7, 7), padding = 3) for i in range(3))
         self.bnc = nn.ModuleList([nn.BatchNorm2d(hidden) for i in range(9)])
         
         self.gcn = nn.ModuleList([nn.Linear(hidden, hidden) for i in range(3)])
