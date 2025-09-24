@@ -1,6 +1,7 @@
 # Multiscale Random-Shape Convolution and Adaptive Graph Convolution Fusion Network for Hyperspectral Image Classification
 
 Published in IEEE Transactions on Geoscience and Remote Sensing, vol. 62, pp. 1-17, 2024, Art no. 5516017
+
 https://doi.org/10.1109/TGRS.2024.3390928
 
 ----------
