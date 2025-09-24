@@ -10,4 +10,4 @@ https://doi.org/10.1109/TGRS.2024.3390928
 The code for the network and the code for computing its adjacency matrix are released. The code is based on PyTorch 2.0.1.
 ## Contact Information
 ----------
-Runhua Sheng: shengrunhua@hhu.edu.cn
+Runhua Sheng: shengrunhua@whu.edu.cn
