@@ -9,6 +9,7 @@ https://doi.org/10.1109/TGRS.2024.3390928
 ## Hongmin Gao, Runhua Sheng, Zhonghao Chen, Shufang Xu, Haiyun Liu, and Bing Zhang
 ----------
 The code for the network and the code for computing its adjacency matrix are released. The code is based on PyTorch 2.0.1.
-## Contact Information
+
 ----------
+# Contact Information
 Runhua Sheng: shengrunhua@whu.edu.cn
